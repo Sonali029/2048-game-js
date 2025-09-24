@@ -1,533 +1,179 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-          .game-container {
+<head>
+    <title>2048 Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .game-container {
             background-color: #bbada0;
-            width : 500px;
-            height : 500px;
-            margin : auto;
-            border-radius : 6px;
-            padding : 7.5px;
-          }
-          .grid-container {
-            position : absolute;
-            z-index : 1;
-          }
-          .grid-row {
-            margin-bottom : 15px;
-          }
-          .grid-cell {
+            width: 500px;
+            height: 500px;
+            border-radius: 6px;
+            padding: 7.5px;
+            position: relative;
+        }
+        .grid-cell {
             border-radius: 3px;
             background: rgba(238, 228, 218, 0.35);
             width: 106.25px;
             height: 106.25px;
-            float : left;
-            margin : 7.5px;
-          }
-
-          .tile {
+            float: left;
             margin: 7.5px;
-            width: 106.25px;
-            height: 106.25px;
-          }
-          .tile-inner {
-            font-size : 55px;
-            line-height : 107px;
-            text-align : center;
+            font-size: 55px;
+            line-height: 107px;
+            text-align: center;
             font-weight: bold;
-          }
-          .animate {
-            /* transition-delay : 2s; */
-            animation:  ease 100ms;
-            animation-fill-mode: backwards;
-          }
-          /* .tile.position-0-0 {
-            left: 0%;
-            top: 0%;
-          }
-          .tile.position-0-1 {
-            left: 25%;
-            top: 0%;
-          }
-          .tile.position-0-2 {
-            left: 50%;
-            top: 0%;
-          }
-          .tile.position-0-3 {
-            left: 75%;
-            top: 0%;
-          }
-          
-          .tile.position-1-0 {
-            left: 0%;
-            top: 25%;
-          }
-          .tile.position-1-1 {
-            left: 25%;
-            top: 25%;
-          }
-          .tile.position-1-2 {
-            left: 50%;
-            top: 25%;
-          }
-          .tile.position-1-3 {
-            left: 75%;
-            top: 25%;
-          }
-
-          .tile.position-2-0 {
-            left: 0%;
-            top: 50%;
-          }
-          .tile.position-2-1 {
-            left: 25%;
-            top: 50%;
-          }
-          .tile.position-2-2 {
-            left: 50%;
-            top: 50%;
-          }
-          .tile.position-2-3 {
-            left: 75%;
-            top: 50%;
-          }
-
-          .tile.position-3-0 {
-            left: 0%;
-            top: 75%;
-          }
-          .tile.position-3-1 {
-            left: 25%;
-            top: 75%;
-          }
-          .tile.position-3-2 {
-            left: 50%;
-            top: 75%;
-          }
-          .tile.position-3-3 {
-            left: 75%;
-            top: 75%;
-          } */
-          .heading {
-            display : flex;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+        .display {
+          display: flex;
+          justify-content: space-between;
+        }
+        .heading { 
             font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
             font-size: 18px;
-            margin: 20px 500px 0px 500px;
-            justify-content: space-between;
-          }
-          .game-intro {
+            margin: 10px 0;
+        }
+        .main-game {
+            margin: 30px auto;
+            width: 500px;
+        }
+        .game-name {
+          font-size: 70px;
+          color: #776e65;
+          font-weight: bold;
+        }
+        .game-intro {
             color: #776e65;
-            float : left;
-          }
-          .newGame {
+            float: left;
+        }
+        .newGame {
             background: #8f7a66;
             border-radius: 3px;
             padding: 0 6px;
-            float : right;
+            width: 140px;
             color: #f9f6f2;
             line-height: 42px;
-            height : 40px;
-            text-align : center;
+            height: 40px;
+            text-align: center;
             cursor: pointer;
-          }
-          .game-score {
+        }
+        .game-score {
             background-color: #bbada0;
             border-radius: 3px;
-            margin: 0px 500px 10px 500px;
+            margin: 10px 0;
             width: 100px;
             padding: 5px;
             text-align: center;
             font-weight: bold;
             font-size: 20px;
-          }
-          .score {
-            color : rgb(250 240 230 / 50%);
-          }
-          .number {
-            color : white;
-          }
-        </style>
-    </head>
-    <body>
-      <div class = "heading">
-        <div class = "game-intro"> Join the numbers to get the <strong>2048 tile!</strong> </div>
-        <div class = "newGame" onclick="restartGame()">New Game</div>
-      </div>
-      <div class = "game-score">
-        <div class = "score">SCORE</div>
-        <div class = "number" id = "score">0</div>
-      </div>
-        <div class = "game-container">
-            <div class = "grid-container">
-                <div class = "grid-row">
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                </div>
-                <div class = "grid-row">
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                </div>
-                <div class = "grid-row">
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                </div>
-                <div class = "grid-row">
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                    <div class = "grid-cell tile tile-inner"></div>
-                </div>
-            </div>
-      
+        }
+        .score {
+            color: rgb(250 240 230 / 50%);
+        }
+        .number {
+            color: white;
+            margin-top: 2px;
+            font-size: 26px;
+        }
+
+        /* Tile colors */
+        .tile-2 { background-color: #eee4da; color: #776e65; }
+        .tile-4 { background-color: #ede0c8; color: #776e65; }
+        .tile-8 { background-color: #f2b179; color: #f9f6f2; }
+        .tile-16 { background-color: #f59563; color: #f9f6f2; }
+        .tile-32 { background-color: #f67c5f; color: #f9f6f2; }
+        .tile-64 { background-color: #f65e3b; color: #f9f6f2; }
+        .tile-128 { background-color: #edcf72; color: #f9f6f2; }
+        .tile-256 { background-color: #edcc61; color: #f9f6f2; }
+        .tile-512 { background-color: #edc850; color: #f9f6f2; }
+        .tile-1024 { background-color: #edc53f; color: #f9f6f2; }
+        .tile-2048 { background-color: #edc22e; color: #f9f6f2; }
+        .tile-4096 { background-color: #3c3a32; color: #f9f6f2; } 
+
+        .best-score {
+          margin-left: 10px;
+        }
+        
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .game-over-text {
+            font-size: 60px;
+            font-weight: bold;
+            color: #776e65;
+            text-align: center;
+        }
+
+        .try-again-button {
+            background: #8f7a66;
+            border-radius: 3px;
+            padding: 10px 20px;
+            color: #f9f6f2;
+            cursor: pointer;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .score-animation {
+            position: absolute;
+            font-size: 30px;
+            font-weight: bold;
+            color: #776e65;
+            z-index: 10;
+            animation: score-fade 1s forwards ease-in-out;
+        }
+
+        @keyframes score-fade {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-game">
+      <div class="display">
+        <div class="game-name">2048</div>
+        <div style="display: flex">
+        <div class="game-score">
+            <div class="score">SCORE</div>
+            <div class="number" id="score">0</div>
         </div>
-      
-    </body>
-
-    <script>
-      let arr = [];
-      let num = Math.floor(Math.random() * 4); 
-      let number = Math.floor((Math.random() * 4));
-           
-      let a = Math.floor(Math.random() * 4);
-      let b = Math.floor(Math.random() * 4);
-      
-      while ((num == a) && (number == b)) {
-            num = Math.floor(Math.random() * 4); 
-            number = Math.floor((Math.random() * 4))
-      }
-    
-        startGame();
-        function startGame() {
-            let cell = document.getElementsByClassName("grid-cell")
-            k = 0;
-                for (i = 0; i < 4; i++) {
-                    arr[i] = [];
-                    for (j = 0; j < 4; j++) {
-                        arr[i][j] = cell[k];
-                        k++;
-                    }    
-                }
-                console.log("Arr", arr)
-                arr[num][number].innerHTML = 2;
-                arr[a][b].innerHTML = 2;
-              
-                defineColor();
-        }
-
-        window.addEventListener("keydown", move)
-
-        function move(e) {
-            if (e.keyCode == 65 || e.keyCode == 37) {
-                console.log("left")  
-                moveAndAddCellsLeft();
-                newCell();
-                defineColor();
-            }
-            else if (e.keyCode == 68 || e.keyCode == 39) {
-                console.log("right")   
-                moveAndAddCellsRight();
-                newCell();
-                defineColor();
-            }
-            else if (e.keyCode == 87 || e.keyCode == 38) {
-                console.log("top")
-                moveAndAddCellsTop();
-                newCell();
-                defineColor();
-            }
-            else if (e.keyCode == 83 || e.keyCode == 40) {
-              console.log("down")
-              moveAndAddCellsDown();
-              newCell();
-              defineColor();
-            }
-          }
-
-        let sum = 0;
-        function moveAndAddCellsDown() {
-          let n = 3;
-          for (rowCell = 0; rowCell <= n; rowCell++) {
-                let notFound;
-                let sameValue;
-                for (columnCell = n; columnCell >= 0; columnCell--) {
-                  if (arr[columnCell][rowCell].innerHTML == "") {
-                    if (notFound == undefined) {
-                      notFound = columnCell;
-                    }
-                    if (notFound > columnCell) {
-                      notFound = notFound;
-                    }
-                    console.log("notFound", notFound)
-                  } else {
-                    if (notFound > columnCell) {
-                      arr[notFound][rowCell].innerHTML = arr[columnCell][rowCell].innerHTML;
-                      arr[columnCell][rowCell].innerHTML = "";
-                      notFound = notFound-1;
-                    }
-                  }
-                }
-
-                for (columnCell = n; columnCell >= 0; columnCell--) {
-                  if (arr[columnCell][rowCell].innerHTML != "") {
-                    if (sameValue == undefined) {
-                      sameValue = columnCell;
-                    } else {
-                      if (arr[sameValue][rowCell].innerHTML == arr[columnCell][rowCell].innerHTML) {
-                        arr[sameValue][rowCell].innerHTML = Number(arr[sameValue][rowCell].innerHTML) + Number(arr[columnCell][rowCell].innerHTML);
-                        sum += Number(arr[sameValue][rowCell].innerHTML);
-                        document.getElementById("score").innerHTML = sum;
-                        console.log(document.getElementById("score").innerHTML, sum)
-                        arr[columnCell][rowCell].innerHTML = "";
-                        sameValue = columnCell;
-                        // newCell();
-                      }
-                      else if (arr[sameValue][rowCell].innerHTML == "") {
-                        arr[sameValue][rowCell].innerHTML = arr[columnCell][rowCell].innerHTML;
-                        arr[columnCell][rowCell].innerHTML = "";
-                      }
-                      else if (arr[sameValue][rowCell].innerHTML != arr[columnCell][rowCell].innerHTML) {
-                        sameValue = columnCell;
-                      }
-                    }
-                  }
-                }
-            }
-        }
-
-        function moveAndAddCellsRight() {
-          let n = 3;
-          for (rowCell = 0; rowCell <= n; rowCell++) {
-            let notFound;
-            let sameValue;
-            for (columnCell = n; columnCell >= 0; columnCell--) {
-              // console.log("arr", rowCell, columnCell)
-              if (arr[rowCell][columnCell].innerHTML == "") {
-                if (notFound == undefined) {
-                  notFound = columnCell;
-                }
-                if (notFound > columnCell) {
-                  notFound = notFound;
-                }   
-              } else {
-                if (notFound > columnCell) {
-                  arr[rowCell][notFound].innerHTML = arr[rowCell][columnCell].innerHTML;
-                  arr[rowCell][columnCell].innerHTML = "";
-                  notFound = notFound - 1;
-                }
-              }
-            }
-         
-            for (columnCell = n; columnCell >= 0; columnCell--) {
-              if (arr[rowCell][columnCell].innerHTML != "") {
-                if (sameValue == undefined) {
-                  sameValue = columnCell;
-                  console.log("sameValue", sameValue)
-                } else {
-                  if (arr[rowCell][sameValue].innerHTML == arr[rowCell][columnCell].innerHTML) {
-                    arr[rowCell][sameValue].innerHTML = Number(arr[rowCell][sameValue].innerHTML) + Number(arr[rowCell][columnCell].innerHTML);
-                    sum += Number(arr[rowCell][sameValue].innerHTML);
-                    document.getElementById("score").innerHTML = sum;
-                    console.log(document.getElementById("score").innerHTML, sum)
-                    arr[rowCell][columnCell].innerHTML = "";
-                    sameValue = columnCell;
-                    // newCell();
-                  }
-                  else if (arr[rowCell][sameValue].innerHTML == "") {
-                    arr[rowCell][sameValue].innerHTML = arr[rowCell][columnCell].innerHTML;
-                    arr[rowCell][columnCell].innerHTML = "";
-                  }
-                  else if (arr[rowCell][sameValue].innerHTML != arr[rowCell][columnCell].innerHTML) {
-                    sameValue = columnCell;
-                  }
-                }
-              }
-            }
-          }
-        }
-                 
-        function moveAndAddCellsTop() {
-          let n = 3;
-          for (rowCell = 0; rowCell <= n; rowCell++) {
-            let notFound;
-            let sameValue;
-            for (columnCell = 0; columnCell <= n; columnCell++) {
-              if (arr[columnCell][rowCell].innerHTML == "") {
-                if (notFound == undefined) {
-                    notFound = columnCell;
-                  }
-                } else {
-                  if (notFound < columnCell) {
-                    arr[notFound][rowCell].innerHTML = arr[columnCell][rowCell].innerHTML;
-                    arr[columnCell][rowCell].innerHTML = "";
-                    notFound = notFound + 1;
-                  }
-                }    
-              }
-
-              for (columnCell = 0; columnCell <= n; columnCell++) {
-                  if (arr[columnCell][rowCell].innerHTML != "") {
-                    if (sameValue == undefined) {
-                      sameValue = columnCell;
-                      console.log("sameValue", sameValue)
-                    } else {
-                      if (arr[sameValue][rowCell].innerHTML == arr[columnCell][rowCell].innerHTML) {
-                        console.log("adding")
-                        arr[sameValue][rowCell].innerHTML = Number(arr[sameValue][rowCell].innerHTML) + Number(arr[columnCell][rowCell].innerHTML);
-                        document.getElementById("score").innerHTML += arr[sameValue][rowCell].innerHTML;
-                        arr[columnCell][rowCell].innerHTML = "";
-                        sameValue = columnCell;
-                        // newCell();
-                      }
-                      else if (arr[sameValue][rowCell].innerHTML == "") {
-                        console.log("addg")
-                        arr[sameValue][rowCell].innerHTML = arr[columnCell][rowCell].innerHTML;
-                        arr[columnCell][rowCell].innerHTML = "";
-                      }
-                      else if (arr[sameValue][rowCell].innerHTML != arr[columnCell][rowCell].innerHTML) {
-                        console.log("addingjjs")
-                        sameValue = columnCell;
-                      } 
-                    }
-                  }
-                }
-            }
-          }
-
-      
-        
-        function moveAndAddCellsLeft() {
-          let n = 3;
-          for (rowCell = 0; rowCell <= n; rowCell++) {
-            let notFound;
-            let sameValue;
-            for (columnCell = 0; columnCell <= n; columnCell++) {
-              console.log("array", arr)
-              if (arr[rowCell][columnCell].innerHTML == "") {
-                if (notFound == undefined) {
-                  console.log("notFound inside", notFound, notFound == "")
-                  notFound = columnCell; 
-                } 
-              } else {
-                if (notFound < columnCell) {
-                  arr[rowCell][notFound].innerHTML = arr[rowCell][columnCell].innerHTML;
-                  arr[rowCell][columnCell].innerHTML = "";
-                  notFound = notFound + 1;
-                }
-              }
-            }
-
-            for (columnCell = 0; columnCell <= n; columnCell++) {
-              if (arr[rowCell][columnCell].innerHTML != "") {
-                if (sameValue == undefined) {
-                  sameValue = columnCell;
-                } else {
-                  if(arr[rowCell][sameValue].innerHTML == arr[rowCell][columnCell].innerHTML) {
-                    arr[rowCell][sameValue].innerHTML = Number(arr[rowCell][sameValue].innerHTML) + Number(arr[rowCell][columnCell].innerHTML);
-                    document.getElementById("score").innerHTML += arr[rowCell][sameValue].innerHTML;
-                    arr[rowCell][columnCell].innerHTML = "";
-                    sameValue = columnCell;
-                  } else if (arr[rowCell][sameValue].innerHTML == "") {
-                    arr[rowCell][sameValue].innerHTML = arr[rowCell][columnCell].innerHTML;
-                    arr[rowCell][columnCell].innerHTML = "";
-                    
-                  } else if (arr[rowCell][sameValue].innerHTML != arr[rowCell][columnCell].innerHTML) {
-                    sameValue = columnCell;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        function newCell() {
-          let c = Math.floor(Math.random() * 4);
-          let d =  Math.floor(Math.random() * 4);
-          while ((c == num) && (d == number)) {
-            c = Math.floor(Math.random() * 4);
-            d =  Math.floor(Math.random() * 4);
-          }
-          while ((c == a) && (d == b)) {
-            c = Math.floor(Math.random() * 4);
-            d =  Math.floor(Math.random() * 4);
-          }
-         
-          if (arr[c][d].innerHTML == "") {
-            arr[c][d].innerHTML = 2;
-          } else {
-            c = Math.floor(Math.random() * 4);
-            d =  Math.floor(Math.random() * 4);
-            if (arr[c][d].innerHTML == "") {
-            arr[c][d].innerHTML = 2;
-            }
-            //  else {
-            //   c = Math.floor(Math.random() * 4);
-            //   d =  Math.floor(Math.random() * 4);
-            //   if (arr[c][d].innerHTML == "") {
-            //     arr[c][d].innerHTML = 2;
-            //   }
-            // }
-          }
-          arr[c][d].classList.add("animate")
-        }
-
-        function defineColor() {
-          let n = 3;
-          for (rowCell = 0; rowCell <= n; rowCell++) {
-            for (columnCell = 0; columnCell <= n; columnCell++) {
-              if (arr[rowCell][columnCell].innerHTML == 2) {
-                arr[rowCell][columnCell].style.backgroundColor = "#eee4da";
-                arr[rowCell][columnCell].style.color = "#776e65";
-              } else if (arr[rowCell][columnCell].innerHTML == 4) {
-                arr[rowCell][columnCell].style.backgroundColor = "#ede0c8";
-                arr[rowCell][columnCell].style.color = "#776e65";
-              } else if (arr[rowCell][columnCell].innerHTML == 8) {
-                arr[rowCell][columnCell].style.backgroundColor = "#f2b179";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 16) {
-                arr[rowCell][columnCell].style.backgroundColor = "#f59563";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 32) {
-                arr[rowCell][columnCell].style.backgroundColor = "#f67c5f";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 64) {
-                arr[rowCell][columnCell].style.backgroundColor = "#f65e3b";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 128) {
-                arr[rowCell][columnCell].style.backgroundColor = "#edcf72";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 256) {
-                arr[rowCell][columnCell].style.backgroundColor = "#edcc61";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 512) {
-                arr[rowCell][columnCell].style.backgroundColor = "#edc850";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 1024) {
-                arr[rowCell][columnCell].style.backgroundColor = "#edc53f";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else if (arr[rowCell][columnCell].innerHTML == 2048) {
-                arr[rowCell][columnCell].style.backgroundColor = "#edc22e";
-                arr[rowCell][columnCell].style.color = "#f9f6f2";
-              } else {
-                arr[rowCell][columnCell].style.backgroundColor = "rgba(238, 228, 218, 0.35)";
-                arr[rowCell][columnCell].style.color = "#776e65";
-              }
-            }
-          }
-      }
-
-      function restartGame() {
-        location.reload();
-      }
-        
-    </script>
+        <div class="game-score best-score">
+          <div class="score">BEST</div>
+          <div class="number" id="best-score">0</div>
+      </div>
+      </div>
+      </div>
+        <div class="heading display">
+          <div>
+          <div class="game-intro">Play <strong>2048 Game</strong> Online</div>
+            <div class="game-intro">Join the numbers to get the <strong>2048 tile!</strong></div>
+            </div>
+            <div class="newGame" onclick="restartGame()">New Game</div>
+        </div>
+        <div class="game-container" id="game-board">
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
 </html>
