@@ -8,7 +8,7 @@ const bestScoreDisplay = document.getElementById("best-score");
 const newGameButton = document.querySelector(".newGame");
 let isGameOver = false;
 
-// New: Create a single, reusable animation element
+// Create a single, reusable animation element
 const scoreAnimDiv = document.createElement('div');
 scoreAnimDiv.classList.add('score-animation');
 document.body.appendChild(scoreAnimDiv);
@@ -91,7 +91,6 @@ function renderBoard() {
     }
 }
 
-// --- Modified updateScore to reuse the animation element ---
 function updateScore(points) {
     // 1. Update the main score instantly
     score += points;
